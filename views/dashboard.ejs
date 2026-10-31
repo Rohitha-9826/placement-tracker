@@ -1,0 +1,67 @@
+<%- include('partials/header', { title: 'Dashboard' }) %>
+
+<div class="topbar">
+  <h2>Welcome, <%= user.name %></h2>
+  <a href="/logout" class="btn btn-secondary btn-small">Logout</a>
+</div>
+
+<div class="card">
+  <h3>Add application</h3>
+  <form method="POST" action="/applications" class="form-grid">
+    <input name="company" placeholder="Company" required>
+    <input name="role" placeholder="Role" required>
+    <input name="date_applied" type="date">
+    <select name="status">
+      <% statuses.forEach(s => { %>
+        <option><%= s %></option>
+      <% }) %>
+    </select>
+    <textarea name="notes" class="full" placeholder="Notes"></textarea>
+    <div class="full"><button class="btn">Add application</button></div>
+  </form>
+</div>
+
+<div class="card">
+  <h3>Summary</h3>
+  <div class="chips">
+    <a class="chip <%= !filter ? 'active' : '' %>" href="/dashboard">All</a>
+    <% statuses.forEach(s => { %>
+      <a class="chip <%= filter === s ? 'active' : '' %>" href="/dashboard?status=<%= s %>">
+        <%= s %>: <%= counts[s] %>
+      </a>
+    <% }) %>
+  </div>
+</div>
+
+<div class="card">
+  <h3>Your applications</h3>
+  <% if (applications.length === 0) { %>
+    <p class="muted">No applications yet.</p>
+  <% } else { %>
+    <div class="table-wrap">
+      <table>
+        <tr>
+          <th>Company</th><th>Role</th><th>Date</th><th>Status</th><th>Notes</th><th>Actions</th>
+        </tr>
+        <% applications.forEach(a => { %>
+          <tr>
+            <td><%= a.company %></td>
+            <td><%= a.role %></td>
+            <td><%= a.date_applied %></td>
+            <td><span class="badge badge-<%= a.status.toLowerCase() %>"><%= a.status %></span></td>
+            <td><%= a.notes %></td>
+            <td>
+              <a href="/applications/<%= a.id %>/edit" class="btn btn-secondary btn-small">Edit</a>
+              <form method="POST" action="/applications/<%= a.id %>/delete" class="inline"
+                    onsubmit="return confirm('Delete this application?')">
+                <button class="btn btn-danger btn-small">Delete</button>
+              </form>
+            </td>
+          </tr>
+        <% }) %>
+      </table>
+    </div>
+  <% } %>
+</div>
+
+<%- include('partials/footer') %>

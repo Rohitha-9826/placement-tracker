@@ -1,0 +1,20 @@
+<%- include('partials/header', { title: 'Edit' }) %>
+<div class="card">
+  <h2>Edit application</h2>
+  <form method="POST" action="/applications/<%= application.id %>/edit" class="form-grid">
+    <input name="company" value="<%= application.company %>" required>
+    <input name="role" value="<%= application.role %>" required>
+    <input name="date_applied" type="date" value="<%= application.date_applied %>">
+    <select name="status">
+      <% statuses.forEach(s => { %>
+        <option <%= s === application.status ? 'selected' : '' %>><%= s %></option>
+      <% }) %>
+    </select>
+    <textarea name="notes" class="full"><%= application.notes %></textarea>
+    <div class="full">
+      <button class="btn">Save changes</button>
+      <a href="/dashboard" class="btn btn-secondary">Cancel</a>
+    </div>
+  </form>
+</div>
+<%- include('partials/footer') %>
